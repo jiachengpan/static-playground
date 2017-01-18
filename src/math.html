@@ -23,6 +23,8 @@
     <h3>
       Math Editor
     </h3>
+    <button class="btn btn-default" onclick="updateRenderer('HTML-CSS')">HTML-CSS</button>
+    <button class="btn btn-default" onclick="updateRenderer('SVG')">SVG</button>
     
     <textarea id="math-input"></textarea>
     <div>
@@ -50,7 +52,6 @@ MathJax.Hub.Config({
 
 <script type="text/javascript">
 var timer = null;
-console.log($('#math-input'));
 
 var input = $('#math-input');
 input.on('keyup', function() {
@@ -64,6 +65,11 @@ input.bind('lastchange', function() {
   $('#math-displayer').text('$$' + input.val() + '$$');
   MathJax.Hub.Queue(["Typeset", MathJax.Hub, 'math-displayer']);
 });
+
+function updateRenderer(renderer) {
+  MathJax.Hub.setRenderer(renderer);
+  input.trigger('lastchange');
+}
 
 </script>
 
