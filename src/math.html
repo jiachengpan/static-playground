@@ -1,0 +1,71 @@
+<html>
+
+<head>
+  <meta charset="utf-8">     
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Math Input</title>            
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="/css/vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+  <script src="/js/vendor/bootstrap.min.js"></script>
+
+  <div class="container">
+    <h3>
+      Math Editor
+    </h3>
+    
+    <textarea id="math-input"></textarea>
+    <div>
+      <p id="math-displayer">
+      </p>
+    </div>
+
+  </div>
+</body>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+<script type="text/javascript">
+var timer = null;
+console.log($('#math-input'));
+
+var input = $('#math-input');
+input.on('keyup', function() {
+  if (timer != null) clearTimeout(timer);
+  timer = setTimeout(function() {
+    input.trigger('lastchange');
+  }, 500);
+});
+
+input.bind('lastchange', function() {
+  $('#math-displayer').text('$$' + input.val() + '$$');
+  MathJax.Hub.Queue(["Typeset", MathJax.Hub, 'math-displayer']);
+});
+
+</script>
+
+
+<html>
