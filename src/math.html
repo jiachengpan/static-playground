@@ -25,7 +25,7 @@
     </h3>
     <button class="btn btn-default" onclick="updateRenderer('HTML-CSS')">HTML-CSS</button>
     <button class="btn btn-default" onclick="updateRenderer('SVG')">SVG</button>
-    <button class="btn btn-default" onclick="saveSVG('.MathJax_SVG svg')">Save</button>
+    <button class="btn btn-default" onclick="savePNG('.MathJax_SVG svg')">Save</button>
     
     <textarea id="math-input"></textarea>
     <div>
@@ -73,7 +73,7 @@ function updateRenderer(renderer) {
   input.trigger('lastchange');
 }
 
-function saveSVG(selector){
+function savePNG(selector){
   var svg = $(selector);
   if (svg.length === 0) return;
   
@@ -93,7 +93,35 @@ function saveSVG(selector){
   });
 
   var svg_string = new XMLSerializer().serializeToString(svg[0]);
-  saveAs(new Blob([svg_string], {type:"application/svg+xml"}), "math-" + now.toISOString() + ".svg");
+  var imgsrc = 'data:image/svg+xml;base64,'+ btoa(svg_string);
+
+  var imgsvg = $("<img class='imgsvg'></img>");
+  imgsvg.attr('src', imgsrc);
+  imgsvg = imgsvg[0];
+
+  var canvas = document.createElement("canvas"),
+      context = canvas.getContext("2d");
+  var image = new Image;
+  image.src = imgsrc;
+  image.onload = function() {
+    var ratio = 5;
+    canvas.width = imgsvg.width;
+    canvas.height= imgsvg.height;
+    canvas.style.width  = canvas.width + 'px';
+    canvas.style.height = canvas.height+ 'px';
+
+    canvas.width *= ratio;
+    canvas.height*= ratio;
+    context.scale(ratio, ratio);
+    context.drawImage(image, 0, 0);
+
+    var a = document.createElement("a");
+    a.download = "fallback.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  };
+
+//  saveAs(new Blob([svg_string], {type:"application/svg+xml"}), "math-" + now.toISOString() + ".svg");
 }
 
 </script>
